@@ -28,9 +28,34 @@ const UserSchema = new Schema({
   avatar: {
     type: String
   },
+  coverPic: {
+      type: String
+  },
   dateOfJoining: {
     type: Date,
     default: Date.now
+  },
+  dateOfBirth: {
+      type: Date
+  },
+  country: {
+      type: String,
+      requiredPaths: true
+  },
+  state: {
+      type: String
+  },
+  followers: {
+      type: Number,
+      default: 0
+  },
+  followings: {
+      type: Number,
+      default: 0
+  },
+  noOfTweets: {
+      type: Number,
+      default: 0
   }
 });
 

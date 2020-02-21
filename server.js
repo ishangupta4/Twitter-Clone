@@ -1,8 +1,15 @@
 const express = require('express');
+const mongoose = require('mongoose');
 
 const app = express();
 
-app.get('/', (req, res) => res.send('Starting path of the app'));
+app.get('/', (req, res) => res.send('Root path of the app'));
+
+const db = require('./config/keys').mongoURI;
+
+mongoose.connect(db, {useNewUrlParser: true, useUnifiedTopology: true})
+  .then(() => console.log('MongoDB Connected Succesfully'))
+  .catch(err => console.log(err));
 
 const port = process.env.PORT || 5000;
 

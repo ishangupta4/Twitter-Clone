@@ -29,7 +29,8 @@ const UserSchema = new Schema({
     type: String
   },
   coverPic: {
-      type: String
+      type: String,
+      default: 'url for cover pic'      //add the url of default cover picture
   },
   dateOfJoining: {
     type: Date,
@@ -37,13 +38,6 @@ const UserSchema = new Schema({
   },
   dateOfBirth: {
       type: Date
-  },
-  country: {
-      type: String,
-      requiredPaths: true
-  },
-  state: {
-      type: String
   },
   followers: {
       type: Number,

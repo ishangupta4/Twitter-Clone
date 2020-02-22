@@ -41,7 +41,15 @@ const ProfileSchema = new Schema({
     },
     followings: {
         type: Number
-    }
+    },
+    tweets: [
+        {
+            tweet: {
+                type: Schema.Types.ObjectId,
+                ref: 'tweets'
+            }
+        }
+    ]
 });
 
 module.exports = Profile = mongoose.model('profile', ProfileSchema);

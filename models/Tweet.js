@@ -21,6 +21,13 @@ const TweetSchema = new Schema({
   mediaLinks: {
     type: String
   },
+  retweetedWithComment: {
+      type: Boolean,
+      tweet: {
+          type: Schema.Types.ObjectId,
+          ref: 'tweets'
+      }
+  },
   mentions: [
     {
       username: {

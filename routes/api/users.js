@@ -18,6 +18,12 @@ router.post('/register', (req, res) => {
     if(!isValid) {
       return res.status(400).json(errors);
     }
+    User.findOne({ username: req.body.username }).then(user => {
+      if(user) {
+        errors.username = 'Username already exists';
+        return res.status(400).json(errors);
+      }
+    })
 
     User.findOne({ email: req.body.email }).then(user => {
       if (user) {
@@ -92,6 +98,15 @@ router.post('/login', (req, res) => {
             }
         });
     });
+});
+
+router.get('/current', passport.authenticate('jwt', {session: false}), (req, res) => {
+  res.json({
+    id: req.user.id,
+    name: req.user.email,
+    username: req.user.username,
+    email: req.user.email
+  });
 });
 
 module.exports = router;

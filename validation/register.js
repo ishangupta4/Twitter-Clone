@@ -30,10 +30,11 @@ module.exports = function validateRegisterInput(data) {
     if(_.isEmpty(data.confirmPassword)) {
         errors.confirmPassword = 'confirm password can not be empty';
     }
-    if(!_.isEmpty(data.confirmPassword && !_.isEmpty(data.password))) {
-        if(!validator.equals(data.password,data.confirmPassword)) {
-            errors.confirmPassword = 'passwords did not match';
-        }
+
+    data.password = !_.isEmpty(data.password) ? data.password : '';
+    data.confirmPassword = !_.isEmpty(data.confirmPassword) ? data.confirmPassword : '';
+    if(!validator.equals(data.password,data.confirmPassword)) {
+        errors.confirmPassword = 'passwords did not match';
     }
 
     return {

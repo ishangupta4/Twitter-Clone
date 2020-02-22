@@ -29,4 +29,4 @@ app.use('/api/tweets', tweets);
 
 const port = process.env.PORT || 5000;
 
-app.listen(port, () => console.log('server is runnint on port: ' + port));
+app.listen(port, () => console.log('server is running on port: ' + port));

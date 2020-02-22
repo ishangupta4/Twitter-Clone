@@ -3,8 +3,12 @@ const router = express.Router();
 const User = require('../../models/User');
 const gravatar = require('gravatar');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const keys = require('../../config/keys');
+const passport = require('passport');
 
 const validateRegisterInput = require('../../validation/register');
+const validateLoginInput = require('../../validation/login');
 
 router.get('/test', (req,res) => res.json({msg: 'Users route work'}));
 
@@ -48,5 +52,46 @@ router.post('/register', (req, res) => {
       }
     });
   });
+
+router.post('/login', (req, res) => {
+
+  const {errors, isValid} = validateLoginInput(req.body);
+
+  if(!isValid) {
+    console.log('something is wrong here');
+    return res.status(400).json(errors);
+  }
+
+    const email = req.body.email;
+    const password = req.body.password;
+    
+    User.findOne({ email }).then(user => {
+        if(!user) {
+          errors.email = 'user not found';
+            return res.status(404).json(errors);
+        }
+
+        bcrypt.compare(password, user.password).then(isMatch => {
+            if(isMatch) {
+                const payload = {id: user.id, name: user.name, username: user.username, avatar: user.avatar};
+
+                jwt.sign(
+                    payload,
+                    keys.secretOrKey,
+                    {expiresIn : 36000},
+                    (err,token) => {
+                        res.json({
+                            success: true,
+                            token: 'Bearer ' + token
+                        })
+                    }
+                )
+            } else {
+              errors.password = 'username or password is incorrect';
+              return res.status(400).json(errors);
+            }
+        });
+    });
+});
 
 module.exports = router;

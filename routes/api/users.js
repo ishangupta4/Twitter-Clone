@@ -174,4 +174,18 @@ router.get('/current',passport.authenticate("jwt", { session: false }),(req, res
   }
 );
 
+router.delete(
+  '/',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    User.findOneAndRemove({ _id: req.user.id }).then(() => {
+      res.json({ success: true })
+      .catch((error) => {
+        assert.isNotOk(error,'Promise error');
+        done();
+      });
+    });
+  }
+);
+
 module.exports = router;

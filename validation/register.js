@@ -32,13 +32,8 @@ module.exports = function validateRegisterInput(data) {
     }
 
     data.bio = !_.isEmpty(data.bio) ? data.bio : '';
-    data.location = !_.isEmpty(data.location) ? data.location : '';
-
     if(!validator.isLength(data.bio, {max: 200})) {
         errors.bio = 'maximum limit of 200 characters reached';
-    }
-    if(!validator.isLength(data.country), {min: 5, max: 50}) {
-        errors.location = 'location name seems to be invalid';
     }
 
     data.password = !_.isEmpty(data.password) ? data.password : '';

@@ -38,17 +38,39 @@ const UserSchema = new Schema({
   dateOfBirth: {
     type: Date
   },
-  followers: {
+  noOfFollowers: {
     type: Number,
     default: 0
   },
-  followings: {
+  noOfFollowings: {
     type: Number,
     default: 0
   },
+  followers: [
+    {
+      follower: {
+        type: Schema.Types.ObjectId,
+        ref: 'users'
+      }
+    }
+  ],
+  followings: [
+    {
+      following: {
+        type: Schema.Types.ObjectId,
+        ref: 'users'
+      } 
+    }
+  ],
   noOfTweets: {
     type: Number,
     default: 0
+  },
+  bio: {
+    type: String
+  },
+  location: {
+    type: String
   }
 });
 

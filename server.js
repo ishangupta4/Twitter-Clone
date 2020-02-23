@@ -7,7 +7,6 @@ const morgan = require("morgan");
 const app = express();
 
 const users = require("./routes/api/users");
-const profile = require("./routes/api/profile");
 const tweets = require("./routes/api/tweets");
 
 mongoose.Promise = global.Promise;
@@ -29,7 +28,6 @@ app.use(passport.initialize());
 require("./config/passport")(passport);
 
 app.use("/api/users", users);
-app.use("/api/profile", profile);
 app.use("/api/tweets", tweets);
 
 app.use((req, res, next) => {

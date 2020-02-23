@@ -12,7 +12,8 @@ const validateLoginInput = require("../../validation/login");
 
 router.get("/test", (req, res) => res.json({ msg: "Users route work" }));
 
-router.get("/", (req, res) => {
+//This route will be teriminated in future
+router.get("/all", (req, res) => {
   User.find()
     .exec()
     .then(users => {
@@ -30,25 +31,38 @@ router.get("/", (req, res) => {
     });
 });
 
-router.get("/getuser/:userId", (req, res, next) => {
-  const id = req.params.userId;
-  User.findById(id)
-    .exec()
+router.get('/myprofile', passport.authenticate('jwt', {session: false}), (req, res) => {
+  res.json({
+    name: req.user.name,
+    username: req.user.username,
+    bio: req.user.bio,
+    avatar: req.user.avatar,
+    coverPic: req.user.coverPic,
+    location: req.user.location,
+    dateOfJoining: req.user.dateOfJoining,
+    daeOfBirth: req.user.dateOfBirth,
+    noOfFollowers: req.user.noOfFollowers,
+    noOfFollowings: req.user.noOfFollowings
+  });
+});
+
+router.get("/getuser/:username", (req, res, next) => {
+  User.findOne({ username: req.params.username})
     .then(user => {
       if (user) {
         res.status(200).json({
           name: user.name,
           username: user.username,
           avatar: user.avatar,
-          followers: user.followers,
-          followings: user.followings,
+          noOfFollowers: user.noOfFollowers,
+          noOfFollowings: user.noOfFollowings,
           request: {
             type: "GET",
             url: "http://localhost:5000/users"
           }
         });
       } else {
-        res.status(404).json({ message: "No user found for provided id" });
+        res.status(404).json({ message: "No user found for provided username" });
       }
     })
     .catch(err => {
@@ -149,11 +163,8 @@ router.post("/login", (req, res) => {
   });
 });
 
-router.get(
-  "/current",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    console.log("something wrong here");
+//This route is only for testing and might be removed in future
+router.get('/current',passport.authenticate("jwt", { session: false }),(req, res) => {
     res.json({
       id: req.user.id,
       name: req.user.email,

@@ -1,16 +1,16 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const UserSchema = new Schema({ 
+const UserSchema = new Schema({
   name: {
     type: String,
     required: true
   },
   username: {
-      type: String,
-      required: true,
-      lowercase: true,
-      unique: true
+    type: String,
+    required: true,
+    lowercase: true,
+    unique: true
   },
   email: {
     type: String,
@@ -18,7 +18,7 @@ const UserSchema = new Schema({
     unique: true
   },
   phone: {
-      type: String,
+    type: String
   },
   password: {
     type: String,
@@ -28,28 +28,50 @@ const UserSchema = new Schema({
     type: String
   },
   coverPic: {
-      type: String,
-      default: 'url for cover pic'      //add the url of default cover picture
+    type: String,
+    default: "url for cover pic" //add the url of default cover picture
   },
   dateOfJoining: {
     type: Date,
     default: Date.now
   },
   dateOfBirth: {
-      type: Date
+    type: Date
   },
-  followers: {
-      type: Number,
-      default: 0
+  noOfFollowers: {
+    type: Number,
+    default: 0
   },
-  followings: {
-      type: Number,
-      default: 0
+  noOfFollowings: {
+    type: Number,
+    default: 0
   },
+  followers: [
+    {
+      follower: {
+        type: Schema.Types.ObjectId,
+        ref: 'users'
+      }
+    }
+  ],
+  followings: [
+    {
+      following: {
+        type: Schema.Types.ObjectId,
+        ref: 'users'
+      } 
+    }
+  ],
   noOfTweets: {
-      type: Number,
-      default: 0
+    type: Number,
+    default: 0
+  },
+  bio: {
+    type: String
+  },
+  location: {
+    type: String
   }
 });
 
-module.exports = User = mongoose.model('users', UserSchema);
+module.exports = User = mongoose.model("users", UserSchema);

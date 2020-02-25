@@ -1,10 +1,10 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const TweetSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
-    ref: 'users'
+    ref: "users"
   },
   name: {
     type: String
@@ -13,7 +13,7 @@ const TweetSchema = new Schema({
     type: String
   },
   username: {
-      type: String
+    type: String
   },
   text: {
     type: String
@@ -22,22 +22,22 @@ const TweetSchema = new Schema({
     type: String
   },
   retweetedWithComment: {
-      type: Boolean,
-      tweet: {
-          type: Schema.Types.ObjectId,
-          ref: 'tweets'
-      }
+    type: Boolean,
+    tweet: {
+      type: Schema.Types.ObjectId,
+      ref: "tweets"
+    }
   },
   mentions: [
     {
       username: {
-          type: String
+        type: String
       }
     }
   ],
   hashtags: [
     {
-        type: String
+      type: String
     }
   ],
   date: {
@@ -48,33 +48,33 @@ const TweetSchema = new Schema({
     {
       user: {
         type: Schema.Types.ObjectId,
-        ref: 'users'
+        ref: "users"
       }
     }
   ],
   retweets: [
-      {
-          user: {
-              type: Schema.Types.ObjectId,
-              ref: 'users'
-          }
+    {
+      user: {
+        type: Schema.Types.ObjectId,
+        ref: "users"
       }
+    }
   ],
   replyingTo: [
-      {
-          username: {
-              type: String
-          }
+    {
+      username: {
+        type: String
       }
+    }
   ],
   comments: [
     {
       tweet: {
-          type: Schema.Types.ObjectId,
-          ref: 'tweets'
+        type: Schema.Types.ObjectId,
+        ref: "tweets"
       }
     }
   ]
 });
 
-module.exports = Tweet = mongoose.model('tweets', TweetSchema);
+module.exports = Tweet = mongoose.model("tweets", TweetSchema);

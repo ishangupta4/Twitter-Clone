@@ -31,6 +31,11 @@ module.exports = function validateRegisterInput(data) {
         errors.confirmPassword = 'confirm password can not be empty';
     }
 
+    data.bio = !_.isEmpty(data.bio) ? data.bio : '';
+    if(!validator.isLength(data.bio, {max: 200})) {
+        errors.bio = 'maximum limit of 200 characters reached';
+    }
+
     data.password = !_.isEmpty(data.password) ? data.password : '';
     data.confirmPassword = !_.isEmpty(data.confirmPassword) ? data.confirmPassword : '';
     if(!validator.equals(data.password,data.confirmPassword)) {

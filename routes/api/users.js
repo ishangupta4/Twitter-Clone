@@ -141,6 +141,31 @@ router.post('/login', (req, res) => {
   });
 });
 
+router.patch("/:userId", (req, res, next) => {
+  const id = req.params.userId;
+  const updateOps = {};
+  for (const ops of req.body) {
+    updateOps[ops.propName] = ops.value;
+  }
+  User.update({ _id: id }, { $set: updateOps })
+    .exec()
+    .then(result => {
+      res.status(200).json({
+        message: "User Data Updated",
+        request: {
+          type: "GET",
+          url: "http://localhost:5000/users/" + id
+        }
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({
+        error: err
+      });
+    });
+});
+
 router.get('/current', passport.authenticate('jwt', { session: false }), (req, res) => {
   res.json({
     id: req.user.id,

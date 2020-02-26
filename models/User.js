@@ -25,11 +25,12 @@ const UserSchema = new Schema({
     required: true
   },
   avatar: {
-    type: String
+    type: String,
+    default: 'default avatar path here'
   },
   coverPic: {
     type: String,
-    default: "url for cover pic" //add the url of default cover picture
+    default: 'default cover path here'
   },
   dateOfJoining: {
     type: Date,
@@ -59,7 +60,7 @@ const UserSchema = new Schema({
       following: {
         type: Schema.Types.ObjectId,
         ref: 'users'
-      } 
+      }
     }
   ],
   noOfTweets: {

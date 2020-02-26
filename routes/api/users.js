@@ -6,6 +6,27 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const keys = require('../../config/keys');
 const passport = require('passport');
+// const fs = require('fs');
+const multer = require("multer");
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads/');
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  }
+});
+const fileFilter = (req, file, cb) => {
+  // reject a file
+  if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
+
+const upload = multer({ storage: storage, limits: { fileSize: 1024 * 500 }, fileFilter: fileFilter }); //limit set to 500 kb
+
 
 const validateRegisterInput = require('../../validation/register');
 const validateLoginInput = require('../../validation/login');
@@ -27,6 +48,8 @@ router.get('/', (req, res) => {
       });
     });
 });
+
+
 
 router.get("/:userId", (req, res, next) => {
   const id = req.params.userId;
@@ -54,6 +77,7 @@ router.get("/:userId", (req, res, next) => {
 });
 
 router.post('/register', (req, res) => {
+  console.log(req.file);
   const { errors, isValid } = validateRegisterInput(req.body);
 
   if (!isValid) {
@@ -76,7 +100,6 @@ router.post('/register', (req, res) => {
         r: 'pg', // Rating
         d: 'mm' // Default
       });
-
       const newUser = new User({
         name: req.body.name,
         email: req.body.email,
@@ -154,7 +177,31 @@ router.patch("/:userId", (req, res, next) => {
         message: "User Data Updated",
         request: {
           type: "GET",
-          url: "http://localhost:5000/users/" + id
+          url: "http://localhost:5000/api/users/" + id
+        }
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({
+        error: err
+      });
+    });
+});
+
+router.patch("/avatar/:userId", upload.single('avatar'), (req, res, next) => {
+  const id = req.params.userId;
+  const updateOps = {
+    avatar: req.file.path
+  };
+  User.update({ _id: id }, { $set: updateOps })
+    .exec()
+    .then(result => {
+      res.status(200).json({
+        message: "User avatar updated",
+        request: {
+          type: "GET",
+          url: "http://localhost:5000/api/users/" + id
         }
       });
     })
@@ -169,7 +216,7 @@ router.patch("/:userId", (req, res, next) => {
 router.get('/current', passport.authenticate('jwt', { session: false }), (req, res) => {
   res.json({
     id: req.user.id,
-    name: req.user.email,
+    name: req.user.name,
     username: req.user.username,
     email: req.user.email
   });

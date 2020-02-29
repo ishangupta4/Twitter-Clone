@@ -62,15 +62,11 @@ const UserSchema = new Schema({
       } 
     }
   ],
-  noOfTweets: {
-    type: Number,
-    default: 0
-  },
-  tweets: [
+  userTweets: [
     {
       tweet: {
-      type: Schema.Types.ObjectId,
-      ref: 'tweets'
+        type: Schema.Types.ObjectId,
+        ref: 'tweets'
       }
     }
   ],

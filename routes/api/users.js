@@ -43,7 +43,8 @@ router.get('/myprofile', passport.authenticate('jwt', {session: false}), (req, r
     daeOfBirth: req.user.dateOfBirth,
     noOfFollowers: req.user.noOfFollowers,
     noOfFollowings: req.user.noOfFollowings,
-    userTweets: req.user.userTweets
+    tweets: req.user.tweets,
+    id: req.user.id
   });
 });
 

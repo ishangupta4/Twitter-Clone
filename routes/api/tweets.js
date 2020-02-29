@@ -27,10 +27,14 @@ router.post('/tweet', passport.authenticate('jwt', {session: false}), (req,res) 
     });
 
     newTweet.save().then(post => res.json(post));
-    // User.findOne({user: req.user.id}).then(user => {
-    //     user.userTweets.unshift({tweet: newTweet.id});
-    //     user.save().then(user => res.json(user));
-    // }).catch(err => console.log(err));
+    User.findOne({username: newTweet.username}).then(user => {
+        if(!user) {
+            console.log('no user found');
+            console.log(newTweet.user);
+        }
+        user.tweets.unshift({tweet: newTweet.id});
+        user.save();
+    }).catch(err => console.log(err));
 });
 
 router.get('/tweets', (req,res) => {
@@ -46,7 +50,7 @@ router.get('/tweet/:id', (req,res) => {
 });
 
 router.delete('/tweets/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
-    User.findOne({user: req.user.id}).then(user => {
+    User.findById(req.user.id).then(user => {
         Tweet.findById(req.params.id)
             .then(tweet => {
                 if(tweet.user.toString() !== req.user.id) {
@@ -54,12 +58,12 @@ router.delete('/tweets/:id', passport.authenticate('jwt', {session: false}), (re
                         notauthorized: 'user not authorized'
                     });
                 }
-                // const removeIndex = user.tweets
-                // .map(item => item.tweet.toString())
-                // .indexOf(req.tweet.id);
+                const removeIndex = user.tweets
+                .map(item => item.tweet.toString())
+                .indexOf(req.params.id);
                tweet.remove().then(() => res.json({success: true})); 
-            //    user.tweets.splice(removeIndex, 1);
-            //    user.save();
+               user.tweets.splice(removeIndex, 1);
+               user.save();
             })
             .catch(err => console.log(err));
     });

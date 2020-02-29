@@ -62,7 +62,7 @@ const UserSchema = new Schema({
       } 
     }
   ],
-  userTweets: [
+  tweets: [
     {
       tweet: {
         type: Schema.Types.ObjectId,

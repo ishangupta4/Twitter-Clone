@@ -39,4 +39,30 @@ router.get('/tweets', (req,res) => {
             .catch(error => res.status(404).json({notweetsfound: 'no tweets found'}));
 });
 
+router.get('/tweet/:id', (req,res) => {
+    Tweet.findById(req.params.id)
+        .then(tweet => res.json(tweet))
+            .catch(error => res.status(404).json({notweetfound: 'no Tweet found with given ID'}));
+});
+
+router.delete('/tweets/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+    User.findOne({user: req.user.id}).then(user => {
+        Tweet.findById(req.params.id)
+            .then(tweet => {
+                if(tweet.user.toString() !== req.user.id) {
+                    return res.status(401).json({
+                        notauthorized: 'user not authorized'
+                    });
+                }
+                // const removeIndex = user.tweets
+                // .map(item => item.tweet.toString())
+                // .indexOf(req.tweet.id);
+               tweet.remove().then(() => res.json({success: true})); 
+            //    user.tweets.splice(removeIndex, 1);
+            //    user.save();
+            })
+            .catch(err => console.log(err));
+    });
+});
+
 module.exports = router;

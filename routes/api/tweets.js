@@ -69,4 +69,60 @@ router.delete('/tweets/:id', passport.authenticate('jwt', {session: false}), (re
     });
 });
 
+router.post('/like/:id',passport.authenticate('jwt', { session: false }),
+    (req, res) => {
+      User.findById(req.user.id).then(user => {
+        Tweet.findById(req.params.id)
+          .then(tweet => {
+            if (
+              tweet.likes.filter(like => like.user.toString() === req.user.id)
+                .length > 0
+            ) {
+              return res
+                .status(400)
+                .json({ alreadyliked: 'User already liked this tweet' });
+            }
+
+            tweet.likes.unshift({ user: req.user.id });
+            user.likes.unshift({tweet: req.params.id});
+            user.save();
+            tweet.save().then(tweet => res.json(tweet));
+          })
+          .catch(err => res.status(404).json({ tweetnotfound: 'No tweet found' }));
+      });
+    }
+);
+
+router.post('/unlike/:id',passport.authenticate('jwt', { session: false }),
+    (req, res) => {
+        User.findById(req.user.id).then(user => {
+        Tweet.findById(req.params.id)
+            .then(tweet => {
+            if (
+                tweet.likes.filter(like => like.user.toString() === req.user.id)
+                .length === 0
+            ) {
+                return res.status(400)
+                            .json({ notliked: 'You have not yet liked this post' });
+            }
+
+            const removeIndex = tweet.likes
+                .map(item => item.user.toString())
+                .indexOf(req.user.id);
+
+            tweet.likes.splice(removeIndex, 1);
+
+            const removeTweetIndex = user.likes
+                .map(item => item.tweet.toString())
+                .indexOf(req.params.id);
+
+            user.likes.splice(removeTweetIndex, 1);
+            user.save();
+            tweet.save().then(tweet => res.json(tweet));
+            })
+            .catch(err => res.status(404).json({ tweetnotfound: 'No tweet found' }));
+        });
+    }
+);
+
 module.exports = router;

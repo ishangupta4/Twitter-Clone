@@ -168,7 +168,7 @@ router.post('/comment/:id', passport.authenticate('jwt', {session: false}), (req
                   ) {
                     return res
                       .status(400)
-                      .json({ alreadyliked: 'User already retweeted this tweet' });
+                      .json({ alreadyretweeted: 'User already retweeted this tweet' });
                   }
                 tweet.retweets.unshift({user: req.user.id});
                 tweet.save().then(tweet => res.json(tweet));
@@ -179,5 +179,37 @@ router.post('/comment/:id', passport.authenticate('jwt', {session: false}), (req
             .catch(err => res.status(404).json({ tweetnotfound: 'No tweet found'}));
     });
 });
+
+router.post('/revert/retweet/:id',passport.authenticate('jwt', { session: false }),
+    (req, res) => {
+        User.findById(req.user.id).then(user => {
+        Tweet.findById(req.params.id)
+            .then(tweet => {
+            if (
+                tweet.retweets.filter(retweet => retweet.user.toString() === req.user.id)
+                .length === 0
+            ) {
+                return res.status(400)
+                            .json({ notretweeted: 'User has not retweeted this post' });
+            }
+
+            const removeIndex = tweet.retweets
+                .map(item => item.user.toString())
+                .indexOf(req.user.id);
+
+            tweet.retweets.splice(removeIndex, 1);
+
+            const removeTweetIndex = user.likes
+                .map(item => item.tweet.toString())
+                .indexOf(req.params.id);
+
+            user.retweets.splice(removeTweetIndex, 1);
+            user.save();
+            tweet.save().then(tweet => res.json(tweet));
+            })
+            .catch(err => res.status(404).json({ tweetnotfound: 'No tweet found' }));
+        });
+    }
+);
 
 module.exports = router;

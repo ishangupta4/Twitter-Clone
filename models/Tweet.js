@@ -23,6 +23,10 @@ const TweetSchema = new Schema({
   },
   retweetedWithComment: {
     type: Boolean,
+    default: false,
+    comment: {
+      type: String
+    },
     tweet: {
       type: Schema.Types.ObjectId,
       ref: "tweets"
@@ -64,6 +68,10 @@ const TweetSchema = new Schema({
     {
       username: {
         type: String
+      },
+      tweetID: {
+        type: Schema.Types.ObjectId,
+        ref: "tweets"
       }
     }
   ],

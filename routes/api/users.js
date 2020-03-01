@@ -49,6 +49,22 @@ router.get('/', (req, res) => {
     });
 });
 
+router.get('/myprofile', passport.authenticate('jwt', { session: false }), (req, res) => {
+  res.json({
+    name: req.user.name,
+    username: req.user.username,
+    bio: req.user.bio,
+    avatar: req.user.avatar,
+    coverPic: req.user.coverPic,
+    location: req.user.location,
+    dateOfJoining: req.user.dateOfJoining,
+    daeOfBirth: req.user.dateOfBirth,
+    noOfFollowers: req.user.noOfFollowers,
+    noOfFollowings: req.user.noOfFollowings,
+    tweets: req.user.tweets,
+    id: req.user.id
+  });
+});
 
 
 router.get("/:userId", (req, res, next) => {

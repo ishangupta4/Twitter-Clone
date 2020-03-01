@@ -158,4 +158,26 @@ router.post('/comment/:id', passport.authenticate('jwt', {session: false}), (req
     }); 
  });
 
+ router.post('/retweet/:id', passport.authenticate('jwt', {session: false}), (req,res) =>{
+    User.findById(req.user.id).then(user => {
+        Tweet.findById(req.params.id)
+            .then(tweet => {
+                if (
+                    tweet.retweets.filter(retweet => retweet.user.toString() === req.user.id)
+                      .length > 0
+                  ) {
+                    return res
+                      .status(400)
+                      .json({ alreadyliked: 'User already retweeted this tweet' });
+                  }
+                tweet.retweets.unshift({user: req.user.id});
+                tweet.save().then(tweet => res.json(tweet));
+
+                user.retweets.unshift({tweet: req.params.id});
+                user.save();
+            })
+            .catch(err => res.status(404).json({ tweetnotfound: 'No tweet found'}));
+    });
+});
+
 module.exports = router;

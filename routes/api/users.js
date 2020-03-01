@@ -44,6 +44,7 @@ router.get('/myprofile', passport.authenticate('jwt', {session: false}), (req, r
     noOfFollowers: req.user.noOfFollowers,
     noOfFollowings: req.user.noOfFollowings,
     tweets: req.user.tweets,
+    retweets: req.user.retweets,
     likes: req.user.likes,
     id: req.user.id
   });

@@ -125,4 +125,37 @@ router.post('/unlike/:id',passport.authenticate('jwt', { session: false }),
     }
 );
 
+router.post('/comment/:id', passport.authenticate('jwt', {session: false}), (req,res) => {
+    User.findById(req.user.id).then(user => {
+        Tweet.findById(req.params.id)
+         .then(tweet => {
+             const {errors, isValid} = validateTweetsInput(req.body);
+             if(!isValid) {
+                 return res.status(400).json(errors);
+             }
+ 
+             const newTweet = new Tweet({
+                 text: req.body.text,
+                 mediaLinks: req.body.mediaLinks,
+                 mentions: req.body.mention,
+                 hashtags: req.body.hashtags,
+                 user: req.user.id,
+                 name: req.body.name,
+                 username: req.body.username,
+                 avatar: req.body.avatar 
+             });
+ 
+             newTweet.replyingTo.unshift({
+                 username: req.user.username,
+                 tweetID: tweet.id
+             });
+             newTweet.save().then(newtweet => res.json(newtweet));
+             user.tweets.unshift({tweet: newTweet.id});
+             user.save();
+             tweet.comments.unshift({tweet: newTweet.id});
+             tweet.save();
+         })
+    }); 
+ });
+
 module.exports = router;

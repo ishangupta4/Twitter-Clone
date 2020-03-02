@@ -22,15 +22,8 @@ const TweetSchema = new Schema({
     type: String
   },
   retweetedWithComment: {
-    type: Boolean,
-    default: false,
-    comment: {
-      type: String
-    },
-    tweet: {
-      type: Schema.Types.ObjectId,
-      ref: "tweets"
-    }
+    type: Schema.Types.ObjectId,
+    ref: "tweets"
   },
   mentions: [
     {

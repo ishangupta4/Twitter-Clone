@@ -140,9 +140,9 @@ router.post('/comment/:id', passport.authenticate('jwt', {session: false}), (req
                  mentions: req.body.mention,
                  hashtags: req.body.hashtags,
                  user: req.user.id,
-                 name: req.body.name,
-                 username: req.body.username,
-                 avatar: req.body.avatar 
+                 name: req.user.name,
+                 username: req.user.username,
+                 avatar: req.user.avatar 
              });
  
              newTweet.replyingTo.unshift({
@@ -211,5 +211,43 @@ router.post('/revert/retweet/:id',passport.authenticate('jwt', { session: false 
         });
     }
 );
+
+router.post('/rtcomment/:id', passport.authenticate('jwt', {session: false}), (req,res) => {
+    User.findById(req.user.id).then(user => {
+        Tweet.findById(req.params.id)
+         .then(tweet => {
+            if (
+                tweet.retweets.filter(retweet => retweet.user.toString() === req.user.id)
+                  .length > 0
+              ) {
+                return res
+                  .status(400)
+                  .json({ alreadyretweeted: 'User already retweeted this tweet' });
+              }
+              
+            const {errors, isValid} = validateTweetsInput(req.body);
+            if(!isValid) {
+                return res.status(400).json(errors);
+            }
+
+            const newTweet = new Tweet({
+                text: req.body.text,
+                mediaLinks: req.body.mediaLinks,
+                mentions: req.body.mention,
+                hashtags: req.body.hashtags,
+                user: req.user.id,
+                name: req.user.name,
+                username: req.user.username,
+                avatar: req.user.avatar,
+                retweetedWithComment: req.params.id 
+            });
+             newTweet.save().then(newtweet => res.json(newtweet));
+             user.tweets.unshift({tweet: newTweet.id});
+             user.save();
+             tweet.retweets.unshift({user: req.user.id});
+             tweet.save();
+         })
+    }); 
+ });
 
 module.exports = router;

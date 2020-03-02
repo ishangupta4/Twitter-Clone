@@ -1,17 +1,22 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
-const passport = require("passport");
+const express = require('express');
+const mongoose = require('mongoose');
 const morgan = require("morgan");
+// const fs = require('fs');
+const multer = require('multer');
+const bodyParser = require('body-parser');
+const passport = require('passport');
+
 
 const app = express();
 
 const users = require("./routes/api/users");
 const tweets = require("./routes/api/tweets");
 
+
 mongoose.Promise = global.Promise;
 
 app.use(morgan("dev"));
+app.use('/uploads', express.static('uploads'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -31,7 +36,7 @@ app.use("/api/users", users);
 app.use("/api/tweets", tweets);
 
 app.use((req, res, next) => {
-  const error = new Error("Not found");
+  const error = new Error("Route not found");
   error.status = 404;
   next(error);
 });

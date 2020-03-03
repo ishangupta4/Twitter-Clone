@@ -182,7 +182,7 @@ router.post('/login', (req, res) => {
   });
 });
 
-router.patch("update/:userId", (req, res, next) => {
+router.patch("/update/:userId", (req, res, next) => {
   const id = req.params.userId;
   const updateOps = {};
   for (const ops of req.body) {

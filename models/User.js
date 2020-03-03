@@ -39,14 +39,6 @@ const UserSchema = new Schema({
   dateOfBirth: {
     type: Date
   },
-  noOfFollowers: {        //Can be computed from follower list
-    type: Number,
-    default: 0
-  },
-  noOfFollowings: {     //Can be computed from following list
-    type: Number,
-    default: 0
-  },
   followers: [
     {
       follower: {

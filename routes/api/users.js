@@ -25,7 +25,7 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-const upload = multer({ storage: storage, limits: { fileSize: 1024 * 500 }, fileFilter: fileFilter }); //limit set to 500 kb
+const upload = multer({ storage: storage, limits: { fileSize: 1024 * 1024 }, fileFilter: fileFilter }); //limit set to 1 mb
 
 
 const validateRegisterInput = require('../../validation/register');
@@ -155,7 +155,7 @@ router.post('/login', (req, res) => {
 
   User.findOne({ email }).then(user => {
     if (!user) {
-      errors.email = 'user not found';
+      errors.email = 'Email does not exist';
       return res.status(404).json(errors);
     }
 
@@ -175,14 +175,14 @@ router.post('/login', (req, res) => {
           }
         )
       } else {
-        errors.password = 'username or password is incorrect';
+        errors.password = 'Incorrect password';
         return res.status(400).json(errors);
       }
     });
   });
 });
 
-router.patch("/:userId", (req, res, next) => {
+router.patch("update/:userId", (req, res, next) => {
   const id = req.params.userId;
   const updateOps = {};
   for (const ops of req.body) {
@@ -231,13 +231,17 @@ router.patch("/avatar/:userId", upload.single('avatar'), (req, res, next) => {
     });
 });
 
-router.get('/current', passport.authenticate('jwt', { session: false }), (req, res) => {
-  res.json({
-    id: req.user.id,
-    name: req.user.name,
-    username: req.user.username,
-    email: req.user.email
-  });
-});
+router.delete('/',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    User.findOneAndRemove({ _id: req.user.id }).then(() => {
+      res.json({ success: true })
+        .catch((error) => {
+          assert.isNotOk(error, 'Promise error');
+          done();
+        });
+    });
+  }
+);
 
 module.exports = router;

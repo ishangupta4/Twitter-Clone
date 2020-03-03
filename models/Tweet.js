@@ -27,9 +27,8 @@ const TweetSchema = new Schema({
   },
   mentions: [
     {
-      username: {
-        type: String
-      }
+      type: String
+
     }
   ],
   hashtags: [

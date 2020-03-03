@@ -39,11 +39,11 @@ const UserSchema = new Schema({
   dateOfBirth: {
     type: Date
   },
-  noOfFollowers: {
+  noOfFollowers: {        //Can be computed from follower list
     type: Number,
     default: 0
   },
-  noOfFollowings: {
+  noOfFollowings: {     //Can be computed from following list
     type: Number,
     default: 0
   },
@@ -74,8 +74,8 @@ const UserSchema = new Schema({
   retweets: [
     {
       tweet: {
-      type: Schema.Types.ObjectId,
-      ref: 'tweets'
+        type: Schema.Types.ObjectId,
+        ref: 'tweets'
       }
     }
   ],
@@ -88,7 +88,8 @@ const UserSchema = new Schema({
     }
   ],
   bio: {
-    type: String
+    type: String,
+    default: ''
   },
   location: {
     type: String

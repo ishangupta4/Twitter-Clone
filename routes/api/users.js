@@ -170,6 +170,7 @@ router.post('/login', (req, res) => {
           (err, token) => {
             res.json({
               success: true,
+              userId: user.id,
               token: 'Bearer ' + token
             })
           }

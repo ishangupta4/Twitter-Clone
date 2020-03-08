@@ -36,14 +36,22 @@ function mentionchecker(str) {
             slicingindex = i + 1;
             break;
         } else {
-            mention = mention + str[i]
-        }
-
+            mention = mention + str[i];
+            if (i+1  == str.length) {
+                mentions.push(mention);
+                slicingindex = i;
+                break;
+            }
+        }   
     }
+    console.log(slicingindex);
     mentionchecker(str.slice(slicingindex));
+
 }
 
 function checker(str) {
+    hashtags = [];
+    mentions = [];
     hashtagchecker(str);
     mentionchecker(str);
     console.log(hashtags);

@@ -4,7 +4,7 @@
   "description": "an app similar to twitter",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "node server.js"
   },
   "author": "ishan gupta",
   "license": "MIT",

@@ -33,11 +33,11 @@ const UserSchema = new Schema({
     default: 'default cover path here'
   },
   dateOfJoining: {
-    type:  Date,
+    type: Date,
     default: Date.now
   },
   dateOfBirth: {
-    type:  Date
+    type: Date
   },
   followers: [
     {

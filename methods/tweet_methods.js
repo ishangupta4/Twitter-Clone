@@ -37,12 +37,12 @@ function mentionchecker(str) {
             break;
         } else {
             mention = mention + str[i];
-            if (i+1  == str.length) {
+            if (i + 1 == str.length) {
                 mentions.push(mention);
                 slicingindex = i;
                 break;
             }
-        }   
+        }
     }
     console.log(slicingindex);
     mentionchecker(str.slice(slicingindex));

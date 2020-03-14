@@ -16,7 +16,12 @@ function hashtagchecker(str) {
             slicingindex = i + 1;
             break;
         } else {
-            hashtag = hashtag + str[i]
+            hashtag = hashtag + str[i];
+            if (i + 1 == str.length) {
+                hashtags.push(hashtag);
+                slicingindex = i;
+                break;
+            }
         }
 
     }

@@ -4,9 +4,9 @@
   "description": "an app similar to twitter",
   "main": "server.js",
   "scripts": {
-    "start": "npm server.js"
+    "start": "node server.js"
   },
-  "author": "ishan gupta",
+  "author": "rishabh sharma",
   "license": "MIT",
   "dependencies": {
     "bcryptjs": "^2.4.3",

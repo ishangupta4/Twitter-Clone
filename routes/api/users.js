@@ -170,6 +170,7 @@ router.post('/login', (req, res) => {
           (err, token) => {
             res.json({
               success: true,
+              userId: user.id,
               token: 'Bearer ' + token
             })
           }
@@ -182,7 +183,7 @@ router.post('/login', (req, res) => {
   });
 });
 
-router.patch("update/:userId", (req, res, next) => {
+router.patch("/update/:userId", (req, res, next) => {
   const id = req.params.userId;
   const updateOps = {};
   for (const ops of req.body) {

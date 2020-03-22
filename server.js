@@ -25,7 +25,7 @@ app.get("/", (req, res) => res.send("Root path of the app"));
 const db = require("./config/keys").mongoURI;
 
 mongoose
-  .connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(db, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
   .then(() => console.log("MongoDB Connected Succesfully"))
   .catch(err => console.log(err));
 

@@ -6,6 +6,27 @@ const Tweet = require("../../models/Tweet");
 const validateTweetsInput = require('../../validation/tweet');
 const checker = require('../../methods/tweet_methods');
 
+const multer = require("multer");
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads/');
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  }
+});
+const fileFilter = (req, file, cb) => {
+  // reject a file
+  if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype === 'image/jpg') {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
+
+const upload = multer({ storage: storage, limits: { fileSize: 1024 * 1024 * 5}, fileFilter: fileFilter }); //limit set to 1 mb
+
+
 router.get('/test', (req, res) => {
     res.json({ msg: 'Tweet route work' })
 });
@@ -245,6 +266,30 @@ router.post('/revert/retweet/:id', passport.authenticate('jwt', { session: false
         });
     }
 );
+
+router.patch("/media/:tweetId", upload.single('mediaLinks'), (req, res, next) => {
+  const id = req.params.tweetId;
+  const updateOps = {
+    mediaLinks: req.file.path
+  };
+  Tweet.update({ _id: id }, { $set: updateOps })
+    .exec()
+    .then(result => {
+      res.status(200).json({
+        message: "Media uploaded",
+        request: {
+          type: "GET",
+          url: "http://localhost:5000/api/tweets/" + id
+        }
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({
+        error: err
+      });
+    });
+});
 
 router.post('/rtcomment/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
     User.findById(req.user.id).then(user => {

@@ -16,9 +16,9 @@ install modules: lodash, express, mongoose, body-parser, passport, passport-jwt,
 * run the command npm -D nodemon in terminal (so that it can watch project)
 * run on port 5000 (http://localhost:5000)
 
-**The mobile application can be downloaded from [here](https://drive.google.com/file/d/1GXXFCVoiAtwwcEmepp1Jf4HJjfz8ep0G/view).
+**The mobile application can be downloaded from [here](https://drive.google.com/file/d/1GXXFCVoiAtwwcEmepp1Jf4HJjfz8ep0G/view).**
 
 <br>
  <img src="/uploads/twitter_clone_home.jpeg" width="250px" height="450px">
- ..
  <img src="/uploads/twitter_clone_sidebar.jpeg" width="250px" height="450px">
+<br>
